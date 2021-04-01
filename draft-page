@@ -27,10 +27,10 @@ h1 {
 </style>
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 <script>
-var group = '2186797';
-var collection = 'NXL7VPB6';
+var group = '2845864';
+var collection = 'M35WGWTX';
 //var key = 'KpHyo9b7kEXZEROhZw4IMriO';
-var key = 'b8fiBk4PeD512n5O5sL3qVe1';
+var key = '2JqbnS8ixXqEcyjxQKgFtx0w';
 // only these "featured tags" will appear in the list of items
 // other tags from Zotero will be ignored
 // TODO grab these from the drop-down menus
@@ -63,7 +63,7 @@ var params = {
 };
 
 $(document).ready(function(){
-  var url = 'all_items.json';
+  var url = 'export_data1.json';
   $.get(url, params, got_page);
   $(document).on('change', 'select', list_records);
   $(document).on('click', 'button#zotero', load_from_zotero);
