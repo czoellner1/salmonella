@@ -1,0 +1,213 @@
+<html>
+<head>
+<title>Salmonella EM Scoping Review articles</title>
+<style type='text/css'>
+h1 {
+  margin
+}
+#summary {
+  font-weight:bold;
+}
+#results {
+  margin:2em;
+}
+.csl-entry {
+  margin: 1em 2em;
+  text-indent: -2em;
+}
+.tag {
+  background: #eee;
+  color: #0a0;
+  padding: 2px 1em;
+  border-radius: 1em;
+  font-family: Arial, sans-serif;
+  font-size: 75%;
+  white-space: nowrap;
+}
+</style>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<script>
+var group = '2186797';
+var collection = 'NXL7VPB6';
+//var key = 'KpHyo9b7kEXZEROhZw4IMriO';
+var key = 'b8fiBk4PeD512n5O5sL3qVe1';
+// only these "featured tags" will appear in the list of items
+// other tags from Zotero will be ignored
+// TODO grab these from the drop-down menus
+var featured_tags = [
+  'Environmental monitoring',
+  'Characterizing isolates',
+  'Validating detection methods',
+  'Outbreak investigation',
+  'Guidance document',
+  'Review article',
+  'Beef/Pork',
+  'Dairy',
+  'Poultry',
+  'Produce',
+  'Low-moisture',
+  'Eggs',
+  'Other'
+];
+
+var records = {};
+var url = 'https://api.zotero.org/groups/' + group + '/collections/' + collection + '/items';
+var params = {
+  limit: 100,
+  start: 0,
+  sort: 'creator',
+  include: 'bib,data',
+  itemType: '-note',
+  style: 'apa',
+  key: key
+};
+
+$(document).ready(function(){
+  var url = 'all_items.json';
+  $.get(url, params, got_page);
+  $(document).on('change', 'select', list_records);
+  $(document).on('click', 'button#zotero', load_from_zotero);
+});
+
+
+function load_from_zotero() {
+  $('#results').html('Loading data from Zotero... this may take several seconds...');
+  $.get(url, params, got_page);
+}
+
+
+function got_page(data) {
+  for (var i=0; i<data.length; i++) {
+    var k = data[i].key;
+    var r = data[i];
+    r = simplify_tags(r);
+    records[k] = r;
+  }
+  if (data.length==100) {
+    // fetch next page
+    params.start += 100;
+    $.get(url, params, got_page);
+  }
+  else {
+    list_records();
+  }
+}
+
+
+function simplify_tags(r) {
+  // convert zotero's tags:[tag:'this', tag:that']
+  // to simpler tags:['this','that']
+  for (var i=0; i<r.data.tags.length; i++) {
+    r.data.tags[i] = r.data.tags[i].tag;
+  }
+  return r
+}
+
+
+function list_records() {
+  $('#results').html('');
+  var count = 0;
+  for (var k in records) {
+    var r = records[k];
+
+    // display records that match the tags
+    if (match_tags(r)) {
+      count++;
+      var html = $(r.bib).html();
+      html = linkify(html);
+      var item = $(html);
+      item = add_tags(item, r.data.tags);
+      $('#results').append(item);
+    }
+  }
+  $('<div id="summary">').text(count + ' matching item' + (count != 1 ? 's' :'')).prependTo('#results');
+}
+
+function add_tags(item, tags) {
+  item.append('<br>');
+  for (var i=0; i<tags.length; i++) {
+    var t = tags[i];
+    if (featured_tags.indexOf(t) > -1) {
+      item.append(' <span class="tag">' + t + '</span>');
+    }
+  }
+  return item;
+}
+
+function linkify(html) {
+  return html.replace(/http[^ <]*/g, "<a href='$&'>$&</a>");
+}
+
+function match_tags(item) {
+  // return true if the item includes the specified tags
+  var tags = [];
+  if (tag1.value) {
+    tags.push(tag1.value);
+  }
+  if (tag2.value) {
+    tags.push(tag2.value);
+  }
+  for (var i=0; i<tags.length; i++) {
+    var tag_to_match = tags[i];
+    if (tag_to_match.length>0) {
+      if (item.data.tags.indexOf(tag_to_match) == -1) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+</script>
+</head>
+<body>
+
+<h1><i>Salmonella</i> Environmental Monitoring Resource Database</h1>
+   
+  <p>Design of an effective, risk-based environmental monitoring (EM) program is essential
+for finding and eliminating foodborne pathogens, such as <i>Salmonella</i>, from the food
+processing environment to prevent product contamination and outbreaks of foodborne illness.
+Salmonella spp. can be transmitted to food production environments via feces from wild animals,
+farm animals, and even pets and then on to humans by consumption of a wide variety of food products:
+poultry, beef, pork, eggs, milk, fruit, vegetables, spices, and nuts. Poultry and beef, particularly ground products, 
+along with nuts have traditionally been considered the most important food vectors of salmonellosis, however 
+recent outbreaks and recalls highlight the importance of Salmonella control in other commodities, specifically 
+fruits and vegetables (mushrooms, peaches, onions, papayas, sprouts, etc.). Most EM resources are specific
+to <i>Listeria</i>, another environmental pathogen but with notably different survival requirements (e.g., cool, wet conditions).
+One highly referenced Salmonella EM guidance document was created by the Almond Board of California for tree nut and nut product producers. 
+Therefore, this database was curated to compile research and guidance information on <i>Salmonella</i> EM
+in order to summarize current knowledge and practices across the food industry.</p>
+  
+  <p>This database presents 79 references identified in a systematic search and screen for literature related to <i>Salmonella</i> EM.
+References are tagged by the respective food sector(s) and EM theme explored in the document. To filter the references, select a 
+<b>Key Theme</b> and/or <b>Food Sector</b> from the drop-down boxes and the list will automatically update. This interactive database 
+is intended to be used as a point-of-reference for particular industry sectors and to facilitate more focused in-depth reviews in the future.</p>
+
+<div>
+  Key Theme:
+  <select id='tag1'>
+    <option></option>
+    <option>Environmental monitoring</option>
+    <option>Characterizing isolates</option>
+    <option>Validating detection methods</option>
+    <option>Outbreak investigation</option>
+    <option>Guidance document</option>
+    <option>Review article</option>
+  </select>
+  Food Sector:
+  <select id='tag2'>
+    <option></option>
+    <option>Low-moisture</option>
+    <option>Beef/Pork</option>
+    <option>Dairy</option>
+    <option>Poultry</option>
+    <option>Fresh produce</option>
+    <option>Eggs</option>
+    <option>Other</option>
+  </select>
+<!--<button id='zotero'>Load current data from zotero</button>-->
+</div>
+<div id='results'></div>
+
+</body>
+</html>
