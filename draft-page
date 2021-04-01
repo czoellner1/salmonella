@@ -63,7 +63,7 @@ var params = {
 };
 
 $(document).ready(function(){
-  var url = 'export_data1.json';
+  var url = 'full_texts.json';
   $.get(url, params, got_page);
   $(document).on('change', 'select', list_records);
   $(document).on('click', 'button#zotero', load_from_zotero);
